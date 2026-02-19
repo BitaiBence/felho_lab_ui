@@ -2,36 +2,84 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserResponse } from '../models';
 
+// Declare Keycloak as a global (loaded via angular.json scripts)
+declare const Keycloak: any;
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
-  currentUser$: Observable<UserResponse | null> = this.currentUserSubject.asObservable();
 
-  constructor() {}
+  private keycloak: any;
 
-  get currentUser(): UserResponse | null {
-    return this.currentUserSubject.value;
+  constructor() {
+    this.keycloak = new Keycloak({
+      url: 'http://localhost:18080',
+      realm: 'skal',
+      clientId: 'ui'
+    });
+
+    // Additional configuration for Keycloak endpoints
+    this.keycloak.tokenUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/token';
+    this.keycloak.userInfoUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/userinfo';
+    this.keycloak.jwkSetUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/certs';
+    this.keycloak.authorizationUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/auth';
+    this.keycloak.issuerUri = 'http://localhost:18080/realms/skal';
+    this.keycloak.userNameAttribute = 'preferred_username';
+
+    this.keycloak.onAuthLogout = () => {
+      console.log('Logout esemény történt');
+      localStorage.removeItem('jwt');
+    };
   }
 
-  get isLoggedIn(): boolean {
-    return this.currentUserSubject.value !== null;
+  /**
+   * Called once at app startup via APP_INITIALIZER.
+   * On first visit (no auth code): check-sso detects no session, user is not logged in.
+   * After redirect back from Keycloak: check-sso processes the auth response and retrieves the token.
+   */
+  init(): Promise<boolean> {
+    return this.keycloak.init({
+      onLoad: 'login-required',
+      scope: 'openid profile email roles',
+      redirectUri: 'http://localhost:8090/ui/',
+    }).then((authenticated: boolean) => {
+      if (authenticated) {
+        console.log('Authenticated!');
+        console.log('JWT:', this.keycloak.token);
+        localStorage.setItem('jwt', this.keycloak.token);
+      } else {
+        console.log('Not authenticated');
+      }
+      return authenticated;
+    }).catch((err: any) => {
+      console.error('Keycloak init failed', err);
+      return false;
+    });
   }
 
-  login(username: string, password: string): void {
-    // TODO: Implement login API call
-    console.log('Login clicked', { username, password });
+  /** Triggers redirect to Keycloak login page. */
+  login(): void {
+    this.keycloak.login({
+      redirectUri: window.location.origin,
+      scope: 'openid profile email roles',
+    });
   }
 
   logout(): void {
-    // TODO: Implement logout API call
-    console.log('Logout clicked');
-    this.currentUserSubject.next(null);
+    localStorage.removeItem('jwt');
+    this.keycloak.logout({
+      redirectUri: 'http://localhost:8090/ui/',
+    });
   }
 
-  register(username: string, password: string): void {
-    // TODO: Implement register API call
-    console.log('Register clicked', { username, password });
+  register(): void {
+    this.keycloak.register({
+      redirectUri: 'http://localhost:8090/ui/',
+    });
+  }
+
+  getToken(): string | null {
+    return this.keycloak.token ?? localStorage.getItem('jwt');
   }
 }
