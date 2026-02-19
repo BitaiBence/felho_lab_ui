@@ -18,7 +18,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "baseHref": "/ui/",
             "outputPath": "dist/photo-ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
