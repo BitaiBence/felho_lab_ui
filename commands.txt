@@ -5,3 +5,7 @@ list all photos, with optional sorting(sortBy can be name or date, order can be 
 upload new photo: POST {{baseUrl}}/photos
 delete photo: DELETE {{baseUrl}}/photos/:photoId
 
+
+on this website: https://www.keycloak.org/docs-api/latest/rest-api/index.html
+look at the documentation of the POST /admin/realms/{realm}/users endpoint. call that endpoint to create a new user in the photo realm.put it in the auth.service.ts register endpoint. dont use the keycloak.min.25.0.6, i want a simple rest call.
+
