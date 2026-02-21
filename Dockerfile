@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginxinc/nginx-unprivileged:alpine
 
 # Copy nginx configuration
 RUN rm /etc/nginx/conf.d/default.conf
@@ -26,7 +26,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist/photo-ui/browser /usr/share/nginx/html
 
 # Expose port
-EXPOSE 80
+EXPOSE 8080
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
