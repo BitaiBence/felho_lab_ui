@@ -14,17 +14,17 @@ export class AuthService {
 
     constructor() {
         this.keycloak = new Keycloak({
-            url: 'http://localhost:18080',
+            url: 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com',
             realm: 'photo',
             clientId: 'ui'
         });
 
         // Additional configuration for Keycloak endpoints
-        this.keycloak.tokenUri = 'http://localhost:18080/realms/photo/protocol/openid-connect/token';
-        this.keycloak.userInfoUri = 'http://localhost:18080/realms/photo/protocol/openid-connect/userinfo';
-        this.keycloak.jwkSetUri = 'http://localhost:18080/realms/photo/protocol/openid-connect/certs';
-        this.keycloak.authorizationUri = 'http://localhost:18080/realms/photo/protocol/openid-connect/auth';
-        this.keycloak.issuerUri = 'http://localhost:18080/realms/photo';
+        this.keycloak.tokenUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/token';
+        this.keycloak.userInfoUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/userinfo';
+        this.keycloak.jwkSetUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/certs';
+        this.keycloak.authorizationUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/auth';
+        this.keycloak.issuerUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo';
         this.keycloak.userNameAttribute = 'preferred_username';
 
         this.keycloak.onAuthLogout = () => {
