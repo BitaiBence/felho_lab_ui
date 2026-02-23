@@ -14,17 +14,17 @@ export class AuthService {
 
     constructor() {
         this.keycloak = new Keycloak({
-            url: 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com',
+            url: 'https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com',
             realm: 'photo',
             clientId: 'ui'
         });
 
         // Additional configuration for Keycloak endpoints
-        this.keycloak.tokenUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/token';
-        this.keycloak.userInfoUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/userinfo';
-        this.keycloak.jwkSetUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/certs';
-        this.keycloak.authorizationUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/auth';
-        this.keycloak.issuerUri = 'http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo';
+        this.keycloak.tokenUri = 'https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/token';
+        this.keycloak.userInfoUri = 'https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/userinfo';
+        this.keycloak.jwkSetUri = 'https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/certs';
+        this.keycloak.authorizationUri = 'https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/auth';
+        this.keycloak.issuerUri = 'https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo';
         this.keycloak.userNameAttribute = 'preferred_username';
 
         this.keycloak.onAuthLogout = () => {
@@ -42,7 +42,7 @@ export class AuthService {
         return this.keycloak.init({
             onLoad: 'login-required',
             scope: 'openid profile email roles',
-            redirectUri: 'http://localhost:8090/ui/',
+            redirectUri: 'https://felho-lab-ui-git7-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/ui/',
         }).then((authenticated: boolean) => {
             if (authenticated) {
                 console.log('Authenticated!');
@@ -69,13 +69,13 @@ export class AuthService {
     logout(): void {
         localStorage.removeItem('jwt');
         this.keycloak.logout({
-            redirectUri: 'http://localhost:8090/ui/',
+            redirectUri: 'https://felho-lab-ui-git7-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/ui/',
         });
     }
 
     register(): void {
         this.keycloak.register({
-            redirectUri: 'http://localhost:8090/ui/',
+            redirectUri: 'https://felho-lab-ui-git7-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/ui/',
         });
     }
 
