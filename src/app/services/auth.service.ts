@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserResponse } from '../models';
 
-// Declare Keycloak as a global (loaded via angular.json scripts)a
+// Declare Keycloak as a global (loaded via angular.json scripts)
 declare const Keycloak: any;
 
 @Injectable({
